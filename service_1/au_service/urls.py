@@ -8,7 +8,6 @@ router.register(r'users', UserViewSet, basename='users')
 router.register(r'registration', RegistrationViewSet, basename='registration')
 router.register(r'login', LoginViewSet, basename='login')
 router.register(r'blist', BListViewSet, basename='blist')
-# router.register(r'get_blist/(?P<good_user_id>\d+)/(?P<bad_user_id>\d+)/$', RetrieveBListViewSet, basename='get_blist')
 
 urlpatterns = [
     path('', include(router.urls)),
