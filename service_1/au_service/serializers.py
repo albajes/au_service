@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import authenticate
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
@@ -48,7 +50,7 @@ class CustomTokenVerifySerializer(TokenVerifySerializer):
     def validate(self, attrs):
         UntypedToken(attrs['token'])
         data = decode(attrs['token'],
-                      'django-insecure-xoh@s*2w2-m@x_mmj)7obe%=ygtpg_t2q-x9d63a(8y*sddf3g',
+                      os.environ.get('SECRET_KEY'),
                       algorithms=['HS256'])
 
         username = User.objects.get(id=data['user_id'])

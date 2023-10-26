@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
+import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -21,13 +22,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-xoh@s*2w2-m@x_mmj)7obe%=ygtpg_t2q-x9d63a(8y*sddf3g'
+# SECRET_KEY = 'django-insecure-xoh@s*2w2-m@x_mmj)7obe%=ygtpg_t2q-x9d63a(8y*sddf3g'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+# DEBUG = int(os.environ.get('DEBUG', default=0))
 
-ALLOWED_HOSTS = []
-
+# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = os.environ.get('DJANGO_ALLOWED_HOSTS', 'localhost 127.0.0.1 [::1]').split(' ')
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0', 'service1']
 
 # Application definition
 
@@ -38,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'au_service',
     'rest_framework_simplejwt',
@@ -46,6 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -77,14 +83,25 @@ WSGI_APPLICATION = 'service_1.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'postgresql',
+#         'USER': 'albert',
+#         'PASSWORD': '037700',
+#         'HOST': 'localhost',
+#         'PORT': '5434',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgresql',
-        'USER': 'albert',
-        'PASSWORD': '037700',
-        'HOST': 'localhost',
-        'PORT': '5434',
+        'ENGINE': os.environ.get('SQL_ENGINE', 'django.db.backends.sqlite3'),
+        'NAME': os.environ.get('SQL_DATABASE', os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': os.environ.get('SQL_USER', 'albert'),
+        'PASSWORD': os.environ.get('SQL_PASSWORD', '037700'),
+        'HOST': os.environ.get('SQL_HOST', 'localhost'),
+        'PORT': os.environ.get('SQL_PORT', '5434'),
     }
 }
 
@@ -139,6 +156,7 @@ REST_FRAMEWORK = {
 
 AUTH_USER_MODEL = 'au_service.User'
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
