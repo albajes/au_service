@@ -11,10 +11,7 @@ then
     echo "PostgreSQL started"
 fi
 
-pwd
 cd service_1
-ls -d */
-pwd
 source ../venv/bin/activate
 python manage.py flush --no-input
 python manage.py migrate
