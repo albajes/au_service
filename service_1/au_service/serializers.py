@@ -1,12 +1,12 @@
 import os
 
 from django.contrib.auth import authenticate
+from jwt import decode
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenVerifySerializer
 from rest_framework_simplejwt.tokens import UntypedToken
 
 from .models import User, BList
-from jwt import decode
 
 
 class UserSerializer(serializers.ModelSerializer):

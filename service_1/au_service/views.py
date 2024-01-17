@@ -1,9 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
-from rest_framework.decorators import api_view, renderer_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import ViewSet, ModelViewSet
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -77,9 +76,9 @@ class BListViewSet(ModelViewSet):
         serializer.save(good_user=self.request.user)
 
 
-@api_view(['GET'])
-@renderer_classes([JSONRenderer])
-def retrieve_blist(request, good_user, bad_user):
-    instance = get_object_or_404(BList.objects.all(), good_user=good_user, bad_user=bad_user)
-    serializer = BListSerializer(instance)
-    return Response(serializer.data)
+class RetrieveBlist(APIView):
+
+    def get(self, request, good_user, bad_user):
+        instance = get_object_or_404(BList.objects.all(), good_user=good_user, bad_user=bad_user)
+        serializer = BListSerializer(instance)
+        return Response(serializer.data, status=status.HTTP_200_OK)
